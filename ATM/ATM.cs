@@ -11,46 +11,35 @@ namespace ATM
     class ATM
     {
         private double summ;
-        private ICheck check;
-        private ICurrency currency;
         
         public ATM()
         {
-            currency = new Hryvna();
             summ= 0;
-            check = null;
         }
         public void Init()
         {
             Console.WriteLine("Enter summ:");
             summ = Convert.ToDouble(Console.ReadLine());
         }
-        public void TopUp(double summ)
+        public void TopUp(double summ, ICheck pCheck)
         {
             if (summ < 0) throw new Exception("Top up summ can't be less than 0");
-            if (check != null)
-                check.Check(this.summ,summ, true);
+            if (pCheck != null)
+                pCheck.Check(this.summ,summ, true);
             this.summ += summ;
         }
-        public void Decrease(double summ) {
+        public void Decrease(double summ, ICheck pCheck) {
             if (summ < 0) throw new Exception("Decrease summ can't be less than 0");
-            if (check != null)
-                check.Check(this.summ, summ, false);
+            if (pCheck != null)
+                pCheck.Check(this.summ, summ, false);
             this.summ -= summ;
         }
 
-        public void SetCheck(ICheck pICheck)
+        public void PrintBalance(ICurrency pCurrency)
         {
-            check= pICheck;
-        }
-        public void SetCurrency(ICurrency pICurrency)
-        {
-           currency = pICurrency;
-           summ = currency.Convert(summ);
-        }
-        public void PrintBalance()
-        {
-            currency.CheckBalance(this.summ);
+            summ = pCurrency.Convert(summ);
+            pCurrency.CheckBalance(this.summ);
+            
         }
     }  
 }
